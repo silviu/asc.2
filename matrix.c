@@ -57,23 +57,24 @@ void first()
 
 void second()
 {
-    int i, j, k;
+    register int i, j, k;
     for (i = 0; i < DIM; i++) {
         unsigned long long* orig_line_a0 = &a[0][i][0];
         unsigned long long* orig_line_a1 = &a[1][i][0];
         unsigned long long* orig_line_a2 = &a[2][i][0];
         
         for (j = 0; j < DIM; j++) {
-            unsigned long long* line_a0 = orig_line_a0;
-            unsigned long long* line_a1 = orig_line_a1;
-            unsigned long long* line_a2 = orig_line_a2;
+            register unsigned long long* line_a0 = orig_line_a0;
+            register unsigned long long* line_a1 = orig_line_a1;
+            register unsigned long long* line_a2 = orig_line_a2;
         
-            unsigned long long* col_b0 = &b[0][0][j];
-            unsigned long long* col_b1 = &b[1][0][j];
-            unsigned long long* col_b2 = &b[2][0][j];
+            register unsigned long long* col_b0 = &b[0][0][j];
+            register unsigned long long* col_b1 = &b[1][0][j];
+            register unsigned long long* col_b2 = &b[2][0][j];
             
             register unsigned long long s00, s01, s02, s10, s11, s12, s20, s21, s22;
             s00 = 0; s01 = 0; s02 = 0; s10= 0; s11 = 0; s12 = 0; s20 = 0; s21 = 0; s22 = 0;
+            
             for (k = 0; k < DIM; k++) {
                 s00 += *line_a0 * *col_b0;
                 s01 += *line_a0 * *col_b1;
@@ -95,6 +96,7 @@ void second()
                 col_b1 += DIM;
                 col_b2 += DIM;
             }
+            
             a0b0[i][j] = s00;
             a0b1[i][j] = s01;
             a0b2[i][j] = s02;
