@@ -2,13 +2,14 @@
 #include <stdlib.h>
 
 #define DIM 787
-#define B 1
-unsigned long long a0b0[DIM][DIM], a0b1[DIM][DIM], a0b2[DIM][DIM],
-                   a1b0[DIM][DIM], a1b1[DIM][DIM], a1b2[DIM][DIM],
-                   a2b0[DIM][DIM], a2b1[DIM][DIM], a2b2[DIM][DIM],
-                   mrez[DIM][DIM];
+#define BIGGER 800
+#define B 16
+unsigned long long a0b0[BIGGER][BIGGER], a0b1[BIGGER][BIGGER], a0b2[BIGGER][BIGGER],
+                   a1b0[BIGGER][BIGGER], a1b1[BIGGER][BIGGER], a1b2[BIGGER][BIGGER],
+                   a2b0[BIGGER][BIGGER], a2b1[BIGGER][BIGGER], a2b2[BIGGER][BIGGER],
+                   mrez[BIGGER][BIGGER];
     
-unsigned long long a[3][DIM][DIM], b[3][DIM][DIM], c[5][DIM][DIM];
+unsigned long long a[3][BIGGER][BIGGER], b[3][BIGGER][BIGGER], c[5][BIGGER][BIGGER];
 
 void init()
 {
@@ -128,8 +129,7 @@ void second()
 void third()
 {
     register int i, j, k, l, m;
-    register int N = DIM / B;
-    register int R = DIM % B;
+    register int N = BIGGER / B;
     
     for (l = 0; l < N; l++) {
         for (m = 0; m < N; m++) {
