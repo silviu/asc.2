@@ -135,7 +135,7 @@ void third()
         for (m = 0; m < N; m++) {
             for (i = l * B; i < B * (l + 1); i++) {
 				for (j = m * B; j < B * (m + 1); j++) {
-					for (k = 0; k < N; k++) {
+					for (k = 0; k < BIGGER; k++) {
                         a0b0[i][j] += a[0][i][k] * b[0][k][j];
                         a0b1[i][j] += a[0][i][k] * b[1][k][j];
                         a0b2[i][j] += a[0][i][k] * b[2][k][j];

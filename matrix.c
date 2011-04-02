@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define DIM 787
-#define B 1
+#define DIM 512
+#define B 16
 unsigned long long a0b0[DIM][DIM], a0b1[DIM][DIM], a0b2[DIM][DIM],
                    a1b0[DIM][DIM], a1b1[DIM][DIM], a1b2[DIM][DIM],
                    a2b0[DIM][DIM], a2b1[DIM][DIM], a2b2[DIM][DIM],
@@ -135,18 +135,18 @@ void third()
         for (m = 0; m < N; m++) {
             for (i = l * B; i < B * (l + 1); i++) {
 				for (j = m * B; j < B * (m + 1); j++) {
-					for (k = 0; k < N; k++) {
-                        a0b0[i][j] += a[0][i][k] * b[0][k][j];
-                        a0b1[i][j] += a[0][i][k] * b[1][k][j];
-                        a0b2[i][j] += a[0][i][k] * b[2][k][j];
+					for (k = 0; k < B; k++) {
+                        a0b0[i][j] += a[0][i][m*B+k] * b[0][l*B+k][j];
+                        a0b1[i][j] += a[0][i][m*B+k] * b[1][l*B+k][j];
+                        a0b2[i][j] += a[0][i][m*B+k] * b[2][l*B+k][j];
                 
-                        a1b0[i][j] += a[1][i][k] * b[0][k][j];
-                        a1b1[i][j] += a[1][i][k] * b[1][k][j];
-                        a1b2[i][j] += a[1][i][k] * b[2][k][j];
+                        a1b0[i][j] += a[1][i][m*B+k] * b[0][l*B+k][j];
+                        a1b1[i][j] += a[1][i][m*B+k] * b[1][l*B+k][j];
+                        a1b2[i][j] += a[1][i][m*B+k] * b[2][l*B+k][j];
                 
-                        a2b0[i][j] += a[2][i][k] * b[0][k][j];
-                        a2b1[i][j] += a[2][i][k] * b[1][k][j];
-                        a2b2[i][j] += a[2][i][k] * b[2][k][j];
+                        a2b0[i][j] += a[2][i][m*B+k] * b[0][l*B+k][j];
+                        a2b1[i][j] += a[2][i][m*B+k] * b[1][l*B+k][j];
+                        a2b2[i][j] += a[2][i][m*B+k] * b[2][l*B+k][j];
 					}
 				}
 			}
