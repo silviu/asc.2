@@ -3,13 +3,13 @@
 
 #define DIM 787
 #define BIGGER 800
-#define B 16
+#define B 50
 unsigned long long a0b0[BIGGER][BIGGER], a0b1[BIGGER][BIGGER], a0b2[BIGGER][BIGGER],
                    a1b0[BIGGER][BIGGER], a1b1[BIGGER][BIGGER], a1b2[BIGGER][BIGGER],
                    a2b0[BIGGER][BIGGER], a2b1[BIGGER][BIGGER], a2b2[BIGGER][BIGGER],
                    mrez[BIGGER][BIGGER];
     
-unsigned long long a[3][BIGGER][BIGGER], b[3][BIGGER][BIGGER], c[5][BIGGER][BIGGER];
+unsigned long long a[3][BIGGER][BIGGER], b[3][BIGGER][BIGGER], c[5][BIGGER][BIGGER], bt[3][BIGGER][BIGGER];
 
 void init()
 {
@@ -19,6 +19,7 @@ void init()
 	    	for (j = 0; j < DIM; j++) {
                 a[k][i][j] = ((k + 1) * (i + j + 2)) % 10000;
                 b[k][i][j] = ((k + i + 1) * (j + 5)) % 10000;
+                bt[k][j][i] = b[k][i][j];
             }
         }
     }
@@ -128,48 +129,57 @@ void second()
 
 void third()
 {
-    register int i, j, k, l, m;
+    register int i, j, k, l, m, p;
     register int N = BIGGER / B;
     
     for (l = 0; l < N; l++) {
         for (m = 0; m < N; m++) {
-            for (i = l * B; i < B * (l + 1); i++) {
-				for (j = m * B; j < B * (m + 1); j++) {
-					for (k = 0; k < BIGGER; k++) {
-                        a0b0[i][j] += a[0][i][k] * b[0][k][j];
-                        a0b1[i][j] += a[0][i][k] * b[1][k][j];
-                        a0b2[i][j] += a[0][i][k] * b[2][k][j];
-                
-                        a1b0[i][j] += a[1][i][k] * b[0][k][j];
-                        a1b1[i][j] += a[1][i][k] * b[1][k][j];
-                        a1b2[i][j] += a[1][i][k] * b[2][k][j];
-                
-                        a2b0[i][j] += a[2][i][k] * b[0][k][j];
-                        a2b1[i][j] += a[2][i][k] * b[1][k][j];
-                        a2b2[i][j] += a[2][i][k] * b[2][k][j];
-					}
-				}
-			}
-		}
-	}
-	
-	/*for (i = 0; i < DIM; i++) {
-	    for (j = 0; j < DIM; j++)
-	        printf("%llu ", a[0][i][j]);
-	   printf("\n");
-	   }
-    printf("\n");
-	
-	for (l = 0; l < N; l++) {
-        for (m = 0; m < N; m++) {
-            for (i = l * B; i < B * (l + 1); i++) {
-				for (j = m * B; j < B * (m + 1); j++) {
-					printf("%llu ", a[0][i][j]);
-				}
-            printf("\n");
-            }}}
+            for (p = 0; p < N; p++) {   
+                for (i = l * B; i < B * (l + 1); i++) {
+                    for (j = m * B; j < B * (m + 1); j++) {
+                        register unsigned long long s00, s01, s02, s10, s11, s12, s20, s21, s22;
+                        s00 = a0b0[i][j]; s01 = a0b1[i][j]; s02 = a0b2[i][j];
+                        s10 = a1b0[i][j]; s11 = a1b1[i][j]; s12 = a1b2[i][j]; 
+                        s20 = a2b0[i][j]; s21 = a2b1[i][j]; s22 = a2b2[i][j];
 
-*/
+                        for (k = p*B; k < B *(p+1); k++) {
+                            unsigned long long a0ik = a[0][i][k];
+                            unsigned long long a1ik = a[1][i][k];
+                            unsigned long long a2ik = a[2][i][k];
+                            
+                            unsigned long long bt0jk = bt[0][j][k];
+                            unsigned long long bt1jk = bt[1][j][k];
+                            unsigned long long bt2jk = bt[2][j][k];
+                            
+                            s00 += a0ik * bt0jk;
+                            s01 += a0ik * bt1jk;
+                            s02 += a0ik * bt2jk;
+                    
+                            s10 += a1ik * bt0jk;
+                            s11 += a1ik * bt1jk;
+                            s12 += a1ik * bt2jk;
+                    
+                            s20 += a2ik * bt0jk;
+                            s21 += a2ik * bt1jk;
+                            s22 += a2ik * bt2jk;
+                        }
+    	    	        a0b0[i][j] = s00;
+                        a0b1[i][j] = s01;
+                        a0b2[i][j] = s02;
+                
+                        a1b0[i][j] = s10;
+                        a1b1[i][j] = s11;
+                        a1b2[i][j] = s12;
+                
+                        a2b0[i][j] = s20;
+                        a2b1[i][j] = s21;
+                        a2b2[i][j] = s22;
+                   }
+               }
+           }
+        }
+    }
+	
 	for (i = 0; i < DIM; i++)
         for (j = 0; j < DIM; j++) {
             c[0][i][j] = a0b0[i][j];

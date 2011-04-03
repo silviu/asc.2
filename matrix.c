@@ -23,7 +23,7 @@ void init()
     }
 }
 
-void first()
+void neoptimizat()
 {
     int i, j, k;
     for (i = 0; i < DIM; i++)
@@ -56,7 +56,7 @@ void first()
 }
 
 
-void second()
+void cache_lines()
 {
     register int i, j, k;
     for (i = 0; i < DIM; i++) {
@@ -125,51 +125,36 @@ void second()
             mrez[i][j] = c[0][i][j] ^ c[1][i][j] ^ c[2][i][j] ^ c[3][i][j] ^ c[4][i][j];
 }
 
-void third()
+void BMM()
 {
-    register int i, j, k, l, m;
+    register int i, j, k, l, m, p;
     register int N = DIM / B;
-    register int R = DIM % B;
     
     for (l = 0; l < N; l++) {
         for (m = 0; m < N; m++) {
-            for (i = l * B; i < B * (l + 1); i++) {
-				for (j = m * B; j < B * (m + 1); j++) {
-					for (k = 0; k < B; k++) {
-                        a0b0[i][j] += a[0][i][m*B+k] * b[0][l*B+k][j];
-                        a0b1[i][j] += a[0][i][m*B+k] * b[1][l*B+k][j];
-                        a0b2[i][j] += a[0][i][m*B+k] * b[2][l*B+k][j];
-                
-                        a1b0[i][j] += a[1][i][m*B+k] * b[0][l*B+k][j];
-                        a1b1[i][j] += a[1][i][m*B+k] * b[1][l*B+k][j];
-                        a1b2[i][j] += a[1][i][m*B+k] * b[2][l*B+k][j];
-                
-                        a2b0[i][j] += a[2][i][m*B+k] * b[0][l*B+k][j];
-                        a2b1[i][j] += a[2][i][m*B+k] * b[1][l*B+k][j];
-                        a2b2[i][j] += a[2][i][m*B+k] * b[2][l*B+k][j];
-					}
-				}
-			}
-		}
+            for (p = 0; p < N; p++) {   
+                for (i = l * B; i < B * (l + 1); i++) {
+                    for (k = p*B; k < B *(p+1); k++) {
+                        for (j = m * B; j < B * (m + 1); j++) {
+
+                            a0b0[i][j] += a[0][i][k] * b[0][k][j];
+                            a0b1[i][j] += a[0][i][k] * b[1][k][j];
+                            a0b2[i][j] += a[0][i][k] * b[2][k][j];
+                    
+                            a1b0[i][j] += a[1][i][k] * b[0][k][j];
+                            a1b1[i][j] += a[1][i][k] * b[1][k][j];
+                            a1b2[i][j] += a[1][i][k] * b[2][k][j];
+                    
+                            a2b0[i][j] += a[2][i][k] * b[0][k][j];
+                            a2b1[i][j] += a[2][i][k] * b[1][k][j];
+                            a2b2[i][j] += a[2][i][k] * b[2][k][j];
+	    				}
+		    		}
+		    	}
+		    }
+    	}
 	}
 	
-	/*for (i = 0; i < DIM; i++) {
-	    for (j = 0; j < DIM; j++)
-	        printf("%llu ", a[0][i][j]);
-	   printf("\n");
-	   }
-    printf("\n");
-	
-	for (l = 0; l < N; l++) {
-        for (m = 0; m < N; m++) {
-            for (i = l * B; i < B * (l + 1); i++) {
-				for (j = m * B; j < B * (m + 1); j++) {
-					printf("%llu ", a[0][i][j]);
-				}
-            printf("\n");
-            }}}
-
-*/
 	for (i = 0; i < DIM; i++)
         for (j = 0; j < DIM; j++) {
             c[0][i][j] = a0b0[i][j];
@@ -219,13 +204,13 @@ int main(int argc, char** argv)
     int run = atoi(argv[2]);
     switch(run) {
     case 1:
-        first();
+        neoptimizat();
         break;
     case 2:
-        second();
+        cache_lines();
         break;
     case 3:
-        third();
+        BMM();
         break;
     case 4:
         break;
